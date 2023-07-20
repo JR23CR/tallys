@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tabla de multiplicación</title>
+</head>
+<body>
+  <h1>Tabla de multiplicación</h1>
+  <p>Es Largo o Corto: <select id="largoCorto" onchange="calcularTotal()"><option value="largo">Largo</option><option value="corto">Corto</option></select></p>
+  <p>Grosor: <input type="number" id="grosor" onchange="calcularTotal()"></p>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Casilla 1</th>
+        <th>Total Piezas</th>
+        <th>Total Suma</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-body">
+      <!-- Aquí se generará la tabla dinámicamente -->
+    </tbody>
+  </table>
+  <p style="font-size: 18px;">Total Piezas: <span id="sumaCasilla2"></span></p>
+  <p style="font-size: 18px;">Total Suma: <span id="sumaCasilla3" style="font-size: 18px;"></span></p>
+  <p style="font-size: 24px;">TOTAL PIES TABLARES: <span id="totalFinal"></span></p>
+
+  <script>
+    function generarTabla() {
+      var tablaBody = document.getElementById("tabla-body");
+      tablaBody.innerHTML = '';
+
+      for (var i = 1; i <= 20; i++) {
+        var fila = document.createElement("tr");
+        var casilla1 = document.createElement("td");
+        var casilla2 = document.createElement("td");
+        var casilla3 = document.createElement("td");
+
+        casilla1.textContent = i;
+        casilla2.innerHTML = '<input type="number" onchange="calcularTotal()">';
+        casilla3.textContent = '';
+
+        fila.appendChild(casilla1);
+        fila.appendChild(casilla2);
+        fila.appendChild(casilla3);
+
+        tablaBody.appendChild(fila);
+      }
+    }
+
+    function calcularTabla() {
+      var tablaBody = document.getElementById("tabla-body");
+      var filas = tablaBody.getElementsByTagName("tr");
+      var grosor = parseInt(document.getElementById("grosor").value);
+      var sumaCasilla2 = 0;
+      var sumaCasilla3 = 0;
+
+      for (var i = 0; i < filas.length; i++) {
+        var fila = filas[i];
+        var casillas = fila.getElementsByTagName("td");
+        var numeroFila1 = parseInt(casillas[0].textContent);
+        var numeroFila2 = parseInt(casillas[1].getElementsByTagName("input")[0].value);
+
+        if (!isNaN(numeroFila2)) {
+          var resultado = numeroFila1 * numeroFila2;
+          casillas[2].textContent = resultado;
+          sumaCasilla2 += numeroFila2;
+          sumaCasilla3 += resultado;
+        } else {
+          casillas[2].textContent = '';
+        }
+      }
+
+      return [sumaCasilla2, sumaCasilla3];
+    }
+
+    function calcularTotal() {
+      var grosor = parseInt(document.getElementById("grosor").value);
+      var largoCorto = document.getElementById("largoCorto").value;
+
+      if (!isNaN(grosor)) {
+        var sumas = calcularTabla();
+        var sumaCasilla2 = sumas[0];
+        var sumaCasilla3 = sumas[1];
+        var totalFinal;
+
+        if (largoCorto === 'largo') {
+          totalFinal = sumaCasilla3 * grosor;
+        } else {
+          totalFinal = sumaCasilla3 / 4;
+        }
+
+        document.getElementById("sumaCasilla2").textContent = sumaCasilla2;
+        document.getElementById("sumaCasilla3").textContent = sumaCasilla3;
+        document.getElementById("totalFinal").textContent = totalFinal.toFixed(2);
+      } else {
+        document.getElementById("sumaCasilla2").textContent = '';
+        document.getElementById("sumaCasilla3").textContent = '';
+        document.getElementById("totalFinal").textContent = '';
+      }
+    }
+
+    generarTabla();
+  </script>
+</body>
+</html>
